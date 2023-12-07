@@ -1,7 +1,8 @@
-module.exports = function model(sequelize, Sequelize) {
-  const ratings = sequelize.define(
-    "ratings",
-    {
+"use strict";
+
+module.exports = {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable("ratings", {
       rating_id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -36,13 +37,10 @@ module.exports = function model(sequelize, Sequelize) {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       },
-    },
+    });
+  },
 
-    {
-      tableName: "ratings",
-      timestamps: false,
-    }
-  );
-
-  return ratings;
+  down: async (queryInterface) => {
+    await queryInterface.dropTable("ratings");
+  },
 };
