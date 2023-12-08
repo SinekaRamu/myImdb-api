@@ -10,7 +10,7 @@ module.exports = {
         unique: true,
       },
       user_id: {
-        type: types.UUID,
+        type: Sequelize.UUID,
         references: {
           model: {
             tableName: "users",
@@ -22,7 +22,7 @@ module.exports = {
         onUpdate: "CASCADE",
       },
       image: {
-        type: types.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       title: {
