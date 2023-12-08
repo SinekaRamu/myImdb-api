@@ -8,9 +8,20 @@ const {
   getMoviesController,
 } = require("../controllers/movie.controller");
 const { movieSchema } = require("../validations/movie.schema");
+const {
+  addRatingController,
+  overallRatingController,
+} = require("../controllers/rating.controller");
+const { ratingSchema } = require("../validations/rating.schema");
 
 router.post("/", validate(movieSchema), isAuthorised, addMoviesController);
 
+router.post(
+  "/rating",
+  validate(ratingSchema),
+  isAuthorised,
+  addRatingController
+);
 // router.get("/", overallRatingController);
 router.get("/", getMoviesController);
 
