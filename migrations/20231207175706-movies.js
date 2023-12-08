@@ -3,11 +3,27 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable("movies", {
-      movie_id: {
+      id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
-        primarykey: true,
+        primaryKey: true,
         unique: true,
+      },
+      user_id: {
+        type: types.UUID,
+        references: {
+          model: {
+            tableName: "users",
+          },
+          key: "id",
+        },
+        allowNull: false,
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      },
+      image: {
+        type: types.STRING,
+        allowNull: false,
       },
       title: {
         type: Sequelize.STRING,

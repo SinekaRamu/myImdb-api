@@ -2,11 +2,27 @@ module.exports = function model(sequelize, types) {
   const Movies = sequelize.define(
     "movies",
     {
-      movie_id: {
+      id: {
         type: types.UUID,
         defaultValue: types.UUIDV4,
         primarykey: true,
         unique: true,
+      },
+      user_id: {
+        type: types.UUID,
+        references: {
+          model: {
+            tableName: "users",
+          },
+          key: "id",
+        },
+        allowNull: false,
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      },
+      image: {
+        type: types.STRING,
+        allowNull: false,
       },
       title: {
         type: types.STRING,

@@ -4,10 +4,10 @@ module.exports = function model(sequelize, types) {
   const Users = sequelize.define(
     "users",
     {
-      user_id: {
+      id: {
         type: types.UUID,
         defaultValue: types.UUIDV4,
-        primarykey: true,
+        primaryKey: true,
         unique: true,
       },
       first_name: {
@@ -30,10 +30,6 @@ module.exports = function model(sequelize, types) {
       user_password: {
         type: types.STRING,
         allowNull: false,
-      },
-      token: {
-        type: types.STRING,
-        defaultValue: "",
       },
     },
     {
