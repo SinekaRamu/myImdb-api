@@ -7,6 +7,7 @@ const morgan = require("morgan");
 const { notfound } = require("./middleware/notfound.middleware");
 const { errorHandler } = require("./middleware/errorhandler.middleware");
 const userRouter = require("./routes/user.routes");
+const movieRouter = require("./routes/movie.routes");
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/", userRouter);
+app.use("/movies", movieRouter);
 
 // 404 handler
 app.use(notfound);
