@@ -17,7 +17,7 @@ const { ratingSchema } = require("../validations/rating.schema");
 router.post("/", validate(movieSchema), isAuthorised, addMoviesController);
 
 router.post(
-  "/rating",
+  "/m/rating",
   validate(ratingSchema),
   isAuthorised,
   addRatingController

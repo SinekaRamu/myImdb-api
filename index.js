@@ -1,6 +1,7 @@
 const bodyParser = require("body-parser");
 const config = require("./config/config");
 
+const cors = require("cors");
 const express = require("express");
 const morgan = require("morgan");
 
@@ -20,7 +21,7 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 app.use(jsonParser);
 app.use(urlencodedParser);
-
+app.use(cors());
 //routes
 app.get("/", (req, res) => {
   res.send("hello");
