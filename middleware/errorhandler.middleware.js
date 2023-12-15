@@ -4,6 +4,13 @@ const errorHandler = (err, req, res, next) => {
   });
 };
 
+const successHandler = (err, req, res, next) => {
+  res.status(err.status || 204).json({
+    message: err.message || ["No Response"],
+  });
+};
+
 module.exports = {
   errorHandler,
+  successHandler,
 };
