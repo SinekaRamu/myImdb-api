@@ -29,7 +29,7 @@ module.exports = function model(sequelize, types) {
         allowNull: false,
       },
       story: {
-        type: types.STRING,
+        type: types.TEXT,
         defaultValue: "",
       },
       language: {

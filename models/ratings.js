@@ -12,6 +12,10 @@ module.exports = function model(sequelize, types) {
         type: types.INTEGER,
         defaultValue: 0,
       },
+      content: {
+        type: types.STRING,
+        defaultValue: "",
+      },
       user_id: {
         type: types.UUID,
         references: {

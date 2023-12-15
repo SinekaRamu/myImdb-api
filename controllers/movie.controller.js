@@ -19,20 +19,17 @@ const addMoviesController = async (req, res, next) => {
   }
 };
 
-const getMoviesController = async (req, res, next) => {
+const getAllMoviesController = async (req, res, next) => {
   try {
-    const getMovies = await models.movies.findAll();
-
-    const overallRating = await models.ratings.findAll({
-      attributes: [
-        "movie_id",
-        [Sequelize.fn("AVG", Sequelize.col("rating")), "overall_rating"],
+    const getMovies = await models.movies.findAll({
+      include: [
+        {
+          association: "rating",
+          attributes: ["rating"],
+        },
       ],
-      logging: true,
-      group: ["movie_id"],
     });
-
-    res.json({ getMovies, overallRating });
+    res.json(getMovies);
   } catch (error) {
     return next({
       status: 400,
@@ -74,6 +71,6 @@ const getMovieController = async (req, res, next) => {
 };
 module.exports = {
   addMoviesController,
-  getMoviesController,
   getMovieController,
+  getAllMoviesController,
 };

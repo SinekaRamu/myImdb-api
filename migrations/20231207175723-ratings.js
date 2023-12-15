@@ -13,6 +13,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         defaultValue: 0,
       },
+      content: {
+        type: Sequelize.STRING,
+        defaultValue: "",
+      },
       user_id: {
         type: Sequelize.UUID,
         references: {
