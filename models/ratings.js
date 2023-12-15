@@ -12,10 +12,10 @@ module.exports = function model(sequelize, types) {
         type: types.INTEGER,
         defaultValue: 0,
       },
-      content: {
-        type: types.STRING,
-        defaultValue: "",
-      },
+      // content: {
+      //   type: types.STRING,
+      //   defaultValue: "",
+      // },
       user_id: {
         type: types.UUID,
         references: {
@@ -47,6 +47,19 @@ module.exports = function model(sequelize, types) {
       timestamps: false,
     }
   );
+
+  ratings.associate = function (models) {
+    ratings.belongsTo(models.movies, {
+      as: "movie",
+      foreignKey: "movie_id",
+      targetKey: "id",
+    });
+    ratings.belongsTo(models.users, {
+      as: "userRating",
+      foreignKey: "user_id",
+      targetKey: "id",
+    });
+  };
 
   return ratings;
 };
