@@ -38,6 +38,31 @@ const getAllMoviesController = async (req, res, next) => {
   }
 };
 
+const updateMovieController = async (req, res, next) => {
+  try {
+    const updateMovie = await models.movies.update(
+      {
+        image: req.body.image,
+        title: req.body.title,
+        story: req.body.story,
+        language: req.body.language,
+        year: req.body.year,
+      },
+      {
+        where: { id: req.params.id || req.decoded.id },
+        returning: true,
+      }
+    );
+
+    res.json(updateMovie);
+  } catch (error) {
+    return next({
+      status: 400,
+      message: error.message,
+    });
+  }
+};
+
 const getMovieController = async (req, res, next) => {
   try {
     const getMovie = await models.movies.findOne({
@@ -72,5 +97,6 @@ const getMovieController = async (req, res, next) => {
 module.exports = {
   addMoviesController,
   getMovieController,
+  updateMovieController,
   getAllMoviesController,
 };

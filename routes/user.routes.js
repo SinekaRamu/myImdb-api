@@ -30,6 +30,6 @@ router.put(
 );
 
 //VIEW THE USER DATA
-router.get("/users/u", isAuthorised, getAccountController);
+router.get("/u/account/", isAuthorised, getAccountController);
 
 module.exports = router;
