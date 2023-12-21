@@ -1,5 +1,6 @@
 const { models, Sequelize } = require("../config/sequalize-config");
-
+const Op = Sequelize.Op;
+const { paginate } = require("../services/pagination");
 const addMoviesController = async (req, res, next) => {
   try {
     const addMovie = await models.movies.create({
@@ -21,15 +22,37 @@ const addMoviesController = async (req, res, next) => {
 
 const getAllMoviesController = async (req, res, next) => {
   try {
-    const getMovies = await models.movies.findAll({
-      include: [
+    const getMovies = await models.movies.findAndCountAll(
+      paginate(
         {
-          association: "rating",
-          attributes: ["rating"],
+          include: [
+            {
+              association: "rating",
+              attributes: ["rating"],
+            },
+          ],
+          where: {
+            title: {
+              [Op.iLike]: `%${req.query.search || ""}%`,
+            },
+          },
+          distinct: true,
+          logging: true,
         },
-      ],
-    });
-    res.json(getMovies);
+        { page: req.query.page || 1, pageSize: req.query.pagesize || 3 }
+      )
+    );
+    if (getMovies.length == 0) {
+      next({
+        status: 400,
+        message: ["Movie not found"],
+      });
+    } else {
+      return res.json({
+        movies: getMovies.rows,
+        totalCount: getMovies.count,
+      });
+    }
   } catch (error) {
     return next({
       status: 400,
@@ -40,6 +63,17 @@ const getAllMoviesController = async (req, res, next) => {
 
 const updateMovieController = async (req, res, next) => {
   try {
+    const searchMovie = await models.movies.findOne({
+      where: { id: req.params.id },
+      logging: true,
+    });
+    console.log(searchMovie);
+    if (req.decoded.id !== searchMovie.user_id) {
+      return next({
+        status: 403,
+        message: "You don't have access to this movie",
+      });
+    }
     const updateMovie = await models.movies.update(
       {
         image: req.body.image,
@@ -49,7 +83,7 @@ const updateMovieController = async (req, res, next) => {
         year: req.body.year,
       },
       {
-        where: { id: req.params.id || req.decoded.id },
+        where: { id: req.params.id },
         returning: true,
       }
     );
