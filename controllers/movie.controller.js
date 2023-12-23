@@ -3,15 +3,23 @@ const Op = Sequelize.Op;
 const { paginate } = require("../services/pagination");
 const addMoviesController = async (req, res, next) => {
   try {
-    const addMovie = await models.movies.create({
-      user_id: req.decoded.id,
-      image: req.body.image,
-      title: req.body.title,
-      story: req.body.story,
-      language: req.body.language,
-      year: req.body.year,
+    const searchMovie = await models.movies.findOne({
+      where: { title: req.body.title },
+      logging: true,
     });
-    addMovie && res.json(addMovie);
+    if (searchMovie) {
+      next({ status: 400, message: ["This movie is already added"] });
+    } else {
+      const addMovie = await models.movies.create({
+        user_id: req.decoded.id,
+        image: req.body.image,
+        title: req.body.title,
+        story: req.body.story,
+        language: req.body.language,
+        year: req.body.year,
+      });
+      res.json(addMovie);
+    }
   } catch (error) {
     return next({
       status: 400,

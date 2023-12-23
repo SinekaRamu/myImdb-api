@@ -98,7 +98,7 @@ const getAccountController = async (req, res, next) => {
   }
 };
 
-//updating the userData
+//PUT - updating the userData
 const updateUserController = async (req, res, next) => {
   try {
     const updateUser = await models.users.update(

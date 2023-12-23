@@ -22,7 +22,7 @@ router.post(
 // router.get("/", overallRatingController);
 router.get("/", getAllMoviesController);
 router.post("/", validate(movieSchema), isAuthorised, addMoviesController);
-router.get("/:id", getMovieController);
-router.put("/:id", updateMovieController);
+router.get("/:id", isAuthorised, getMovieController);
+router.put("/:id", isAuthorised, updateMovieController);
 
 module.exports = router;
