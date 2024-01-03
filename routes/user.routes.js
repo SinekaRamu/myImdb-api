@@ -6,12 +6,14 @@ const {
   updateUserController,
   loginController,
   getAccountController,
+  updatePasswordController,
 } = require("../controllers/user.controller");
 const { validate } = require("../middleware/validation.middleware");
 const {
   signUpSchema,
   updateUserSchema,
   loginSchema,
+  updatePasswordSchema,
 } = require("../validations/authentication.schema");
 const { isAuthorised } = require("../middleware/authorization.middleware");
 
@@ -27,6 +29,12 @@ router.put(
   isAuthorised,
   validate(updateUserSchema),
   updateUserController
+);
+router.patch(
+  "/users/u/password",
+  isAuthorised,
+  validate(updatePasswordSchema),
+  updatePasswordController
 );
 
 //VIEW THE USER DATA

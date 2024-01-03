@@ -127,9 +127,58 @@ const updateUserController = async (req, res, next) => {
   }
 };
 
+const updatePasswordController = async (req, res, next) => {
+  try {
+    const searchUser = await models.users.findOne({
+      where: { id: req.decoded.id },
+    });
+
+    if (searchUser === null) {
+      return next({
+        status: 400,
+        message: "User not found",
+      });
+    } else {
+      const passwordMatch = await helper.comparePassword(
+        req.body.oldPassword,
+        searchUser.user_password
+      );
+
+      if (passwordMatch) {
+        const updatedPassword = await models.users.update(
+          {
+            user_password: req.body.newPassword,
+          },
+          {
+            where: {
+              id: req.decoded.id,
+            },
+            returning: true,
+            individualHooks: true,
+          }
+        );
+        res.json({
+          message: "Password Updated Successfully",
+        });
+      } else {
+        return next({
+          status: 400,
+          message: "Password Incorrect",
+        });
+      }
+    }
+  } catch (error) {
+    return next({
+      status: 400,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   addUserController,
   loginController,
   getAccountController,
   updateUserController,
+  updatePasswordController,
 };
