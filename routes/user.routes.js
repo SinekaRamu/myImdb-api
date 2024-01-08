@@ -38,6 +38,6 @@ router.patch(
 );
 
 //VIEW THE USER DATA
-router.get("/u/account/", isAuthorised, getAccountController);
+router.get("/users/u", isAuthorised, getAccountController);
 
 module.exports = router;

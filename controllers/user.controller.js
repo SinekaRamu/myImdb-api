@@ -52,7 +52,6 @@ const loginController = async (req, res, next) => {
       },
       logging: true,
     });
-
     const passwordMatch = await helper.comparePassword(
       req.body.user_password,
       searchUser.user_password
@@ -132,6 +131,7 @@ const updatePasswordController = async (req, res, next) => {
     const searchUser = await models.users.findOne({
       where: { id: req.decoded.id },
     });
+    // res.json(searchUser);s
 
     if (searchUser === null) {
       return next({
@@ -143,7 +143,6 @@ const updatePasswordController = async (req, res, next) => {
         req.body.oldPassword,
         searchUser.user_password
       );
-
       if (passwordMatch) {
         const updatedPassword = await models.users.update(
           {
@@ -157,7 +156,8 @@ const updatePasswordController = async (req, res, next) => {
             individualHooks: true,
           }
         );
-        res.json({
+        return res.json({
+          data: updatedPassword,
           message: "Password Updated Successfully",
         });
       } else {
