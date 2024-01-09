@@ -9,6 +9,7 @@ const { notfound } = require("./middleware/notfound.middleware");
 const { errorHandler } = require("./middleware/errorhandler.middleware");
 const userRouter = require("./routes/user.routes");
 const movieRouter = require("./routes/movie.routes");
+const { multerupload } = require("./middleware/multerUpload.middleware");
 
 const app = express();
 
@@ -27,42 +28,36 @@ app.get("/", (req, res) => {
   res.send("hello");
 });
 
-const generateOTP = () => {
-  const digits = "0123456789";
-  let otp = "";
-  for (let i = 0; i < 6; i++) {
-    otp += digits[Math.floor(Math.random() * 10)];
+app.post(
+  "/upload",
+  multerupload("").single("file"),
+  async function (err, req, res, next) {
+    console.log("\n req.file...", req.file);
+    const image = req.file;
+    if (!image) {
+      return next({ status: 400, message: "upload file" });
+    }
+    console.log(err);
+    return res.json({
+      file: req.file,
+    });
   }
-  return otp;
-};
+);
 
-app.post("/forget-password", async function (req, res) {
-  const url = "/forget-password";
-  const otp = generateOTP();
-  const receiver = req.body.email;
-  const options = {
-    from: `sender<${mailConfig.email}>`,
-    to: receiver,
-    subject: "test mail",
-    text: "test content", // plain text body
-    // html: `<p>Password forget validation ${otp} </p>
-    //  <a href="${url}" target="_blank">View</a>`, // html body
-  };
+//   transporter.sendMail(options, (error, info) => {
+//     if (error) console.log("\n mail error..", error);
+//     return console.log("\n success...", info);
+//   });
 
-  transporter.sendMail(options, (error, info) => {
-    if (error) console.log("\n mail error..", error);
-    return console.log("\n success...", info);
-  });
-
-  if (receiver) {
-    return res.json(
-      next({
-        status: 200,
-        message: "sending email",
-      })
-    );
-  }
-});
+//   if (receiver) {
+//     return res.json(
+//       next({
+//         status: 200,
+//         message: "sending email",
+//       })
+//     );
+//   }
+// });
 
 app.use("/", userRouter);
 app.use("/movies", movieRouter);

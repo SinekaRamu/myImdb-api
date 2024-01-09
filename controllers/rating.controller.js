@@ -1,12 +1,24 @@
-const { models } = require("../config/sequalize-config");
+const { models, Sequelize } = require("../config/sequalize-config");
 
 const addRatingController = async (req, res, next) => {
   try {
+    const searchUser = await models.ratings.findOne({
+      where: {
+        user_id: req.decoded.id,
+        movie_id: req.params.id,
+      },
+      logging: true,
+    });
+    if (searchUser != null) {
+      return next({
+        status: 403,
+        message: ["You already rated this movie"],
+      });
+    }
     const addRating = await models.ratings.create({
       rating: req.xop.rating,
-      content: req.xop.content,
       user_id: req.decoded.id,
-      movie_id: req.xop.movie_id,
+      movie_id: req.params.id,
     });
     return res.json({
       addRating,
@@ -36,6 +48,7 @@ const overallRatingController = async (req, res, next) => {
     });
   }
 };
+
 module.exports = {
   addRatingController,
   overallRatingController,
