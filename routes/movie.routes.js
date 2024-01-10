@@ -13,10 +13,17 @@ const {
 const { movieSchema } = require("../validations/movie.schema");
 const { addRatingController } = require("../controllers/rating.controller");
 const { ratingSchema } = require("../validations/rating.schema");
+const { multerupload } = require("../middleware/multerUpload.middleware");
 
 // router.get("/", overallRatingController);
 router.get("/", getAllMoviesController);
-router.post("/", validate(movieSchema), isAuthorised, addMoviesController);
+router.post(
+  "/",
+  isAuthorised,
+  multerupload("").single("image"),
+  validate(movieSchema),
+  addMoviesController
+);
 router.get("/:id", isAuthorised, getMovieController);
 router.put("/:id", isAuthorised, updateMovieController);
 router.delete("/:id", isAuthorised, deleteMovieController);

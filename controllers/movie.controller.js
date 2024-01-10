@@ -10,15 +10,20 @@ const addMoviesController = async (req, res, next) => {
     if (searchMovie) {
       next({ status: 400, message: ["This movie is already added"] });
     } else {
-      const addMovie = await models.movies.create({
-        user_id: req.decoded.id,
-        image: req.body.image,
-        title: req.body.title,
-        story: req.body.story,
-        language: req.body.language,
-        year: req.body.year,
-      });
-      return res.json(addMovie);
+      const image = req.file;
+      if (!image) {
+        return next({ status: 400, message: "upload file" });
+      } else {
+        const addMovie = await models.movies.create({
+          user_id: req.decoded.id,
+          image: req.file.filename,
+          title: req.body.title,
+          story: req.body.story,
+          language: req.body.language,
+          year: req.body.year,
+        });
+        return res.json(addMovie);
+      }
     }
   } catch (error) {
     return next({
