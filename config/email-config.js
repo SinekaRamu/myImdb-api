@@ -1,7 +1,9 @@
 const nodemailer = require("nodemailer");
+require("dotenv").config();
+
 const mailConfig = {
-  email: "sineka_mv@zohomail.in",
-  password: "sIneka@619",
+  email: process.env.ZOHO_MAIL,
+  password: process.env.ZOHO_PASSWORD,
 };
 
 // create reusable transporter object using the default SMTP transport

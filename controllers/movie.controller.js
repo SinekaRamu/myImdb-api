@@ -4,6 +4,7 @@ const { paginate } = require("../services/pagination");
 const addMoviesController = async (req, res, next) => {
   try {
     const searchMovie = await models.movies.findOne({
+      attributes: ["title"],
       where: { title: req.body.title },
       logging: true,
     });

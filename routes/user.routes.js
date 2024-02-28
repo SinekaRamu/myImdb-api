@@ -16,6 +16,10 @@ const {
   updatePasswordSchema,
 } = require("../validations/authentication.schema");
 const { isAuthorised } = require("../middleware/authorization.middleware");
+const {
+  forgetPassword,
+  otpVerification,
+} = require("../controllers/fortgetPassword.controller");
 
 //CREATE USER ACCOUNT
 router.post("/signup", validate(signUpSchema), addUserController);
@@ -36,6 +40,9 @@ router.patch(
   validate(updatePasswordSchema),
   updatePasswordController
 );
+
+router.post("/forget-password", forgetPassword);
+router.post("/verify/otp/:id", otpVerification);
 
 //VIEW THE USER DATA
 router.get("/users/u", isAuthorised, getAccountController);

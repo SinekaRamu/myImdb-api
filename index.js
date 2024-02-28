@@ -9,8 +9,8 @@ const { notfound } = require("./middleware/notfound.middleware");
 const { errorHandler } = require("./middleware/errorhandler.middleware");
 const userRouter = require("./routes/user.routes");
 const movieRouter = require("./routes/movie.routes");
-const { multerupload } = require("./middleware/multerUpload.middleware");
 const path = require("path");
+const fs = require("fs");
 
 const app = express();
 
@@ -25,6 +25,8 @@ app.use(jsonParser);
 app.use(urlencodedParser);
 app.use(cors());
 
+app.use("/uploads", express.static(path.join(__dirname + "/uploads")));
+
 //routes
 app.get("/", (req, res) => {
   res.send("hello");
@@ -32,6 +34,16 @@ app.get("/", (req, res) => {
 
 app.use("/", userRouter);
 app.use("/movies", movieRouter);
+
+app.get("/images/:imageName", (req, res) => {
+  // do a bunch of if statements to make sure the user is
+  // authorized to view this image, then
+
+  const imageName = req.params.imageName;
+  const readStream = fs.createReadStream(`images/${imageName}`);
+  readStream.pipe(res);
+  // res.send(readStream.pipe(res));
+});
 
 // 404 handler
 app.use(notfound);
